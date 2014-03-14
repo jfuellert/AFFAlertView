@@ -1,0 +1,344 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7614E45218D293A000C507F7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 761AA72218D2927B0089195E /* Foundation.framework */; };
+		7614E45318D293A000C507F7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 761AA72418D2927B0089195E /* CoreGraphics.framework */; };
+		7614E45418D293A000C507F7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 761AA72618D2927B0089195E /* UIKit.framework */; };
+		7614E45A18D293A000C507F7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7614E45818D293A000C507F7 /* InfoPlist.strings */; };
+		7614E45C18D293A000C507F7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E45B18D293A000C507F7 /* main.m */; };
+		7614E46018D293A000C507F7 /* AFFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E45F18D293A000C507F7 /* AFFAppDelegate.m */; };
+		7614E48218D293CF00C507F7 /* AFFAlertViewButtonModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48018D293CF00C507F7 /* AFFAlertViewButtonModel.m */; };
+		7614E48618D2945900C507F7 /* AFFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48518D2945900C507F7 /* AFFAlertView.m */; };
+		7614E48918D2955A00C507F7 /* AFFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48818D2955A00C507F7 /* AFFViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7614E45118D293A000C507F7 /* TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7614E45718D293A000C507F7 /* TestHarness-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestHarness-Info.plist"; sourceTree = "<group>"; };
+		7614E45918D293A000C507F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7614E45B18D293A000C507F7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7614E45D18D293A000C507F7 /* TestHarness-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestHarness-Prefix.pch"; sourceTree = "<group>"; };
+		7614E45E18D293A000C507F7 /* AFFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFFAppDelegate.h; sourceTree = "<group>"; };
+		7614E45F18D293A000C507F7 /* AFFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFFAppDelegate.m; sourceTree = "<group>"; };
+		7614E47F18D293CF00C507F7 /* AFFAlertViewButtonModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFFAlertViewButtonModel.h; sourceTree = "<group>"; };
+		7614E48018D293CF00C507F7 /* AFFAlertViewButtonModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFAlertViewButtonModel.m; sourceTree = "<group>"; };
+		7614E48418D2945900C507F7 /* AFFAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFFAlertView.h; sourceTree = "<group>"; };
+		7614E48518D2945900C507F7 /* AFFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFAlertView.m; sourceTree = "<group>"; };
+		7614E48718D2955A00C507F7 /* AFFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFFViewController.h; sourceTree = "<group>"; };
+		7614E48818D2955A00C507F7 /* AFFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFViewController.m; sourceTree = "<group>"; };
+		761AA72218D2927B0089195E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		761AA72418D2927B0089195E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		761AA72618D2927B0089195E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		761AA73B18D2927B0089195E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7614E44E18D293A000C507F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7614E45318D293A000C507F7 /* CoreGraphics.framework in Frameworks */,
+				7614E45418D293A000C507F7 /* UIKit.framework in Frameworks */,
+				7614E45218D293A000C507F7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7614E45518D293A000C507F7 /* TestHarness */ = {
+			isa = PBXGroup;
+			children = (
+				7614E45E18D293A000C507F7 /* AFFAppDelegate.h */,
+				7614E45F18D293A000C507F7 /* AFFAppDelegate.m */,
+				7614E48718D2955A00C507F7 /* AFFViewController.h */,
+				7614E48818D2955A00C507F7 /* AFFViewController.m */,
+				7614E45618D293A000C507F7 /* Supporting Files */,
+			);
+			path = TestHarness;
+			sourceTree = "<group>";
+		};
+		7614E45618D293A000C507F7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7614E45718D293A000C507F7 /* TestHarness-Info.plist */,
+				7614E45818D293A000C507F7 /* InfoPlist.strings */,
+				7614E45B18D293A000C507F7 /* main.m */,
+				7614E45D18D293A000C507F7 /* TestHarness-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7614E47B18D293CF00C507F7 /* AFFAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				7614E48318D2945900C507F7 /* AFFAlertView */,
+				7614E47E18D293CF00C507F7 /* AFFAlertViewButtonModel */,
+			);
+			path = AFFAlertView;
+			sourceTree = "<group>";
+		};
+		7614E47E18D293CF00C507F7 /* AFFAlertViewButtonModel */ = {
+			isa = PBXGroup;
+			children = (
+				7614E47F18D293CF00C507F7 /* AFFAlertViewButtonModel.h */,
+				7614E48018D293CF00C507F7 /* AFFAlertViewButtonModel.m */,
+			);
+			path = AFFAlertViewButtonModel;
+			sourceTree = "<group>";
+		};
+		7614E48318D2945900C507F7 /* AFFAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				7614E48418D2945900C507F7 /* AFFAlertView.h */,
+				7614E48518D2945900C507F7 /* AFFAlertView.m */,
+			);
+			path = AFFAlertView;
+			sourceTree = "<group>";
+		};
+		761AA71618D2927B0089195E = {
+			isa = PBXGroup;
+			children = (
+				7614E47B18D293CF00C507F7 /* AFFAlertView */,
+				761AA72118D2927B0089195E /* Frameworks */,
+				761AA72018D2927B0089195E /* Products */,
+				7614E45518D293A000C507F7 /* TestHarness */,
+			);
+			sourceTree = "<group>";
+		};
+		761AA72018D2927B0089195E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7614E45118D293A000C507F7 /* TestHarness.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		761AA72118D2927B0089195E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				761AA72218D2927B0089195E /* Foundation.framework */,
+				761AA72418D2927B0089195E /* CoreGraphics.framework */,
+				761AA72618D2927B0089195E /* UIKit.framework */,
+				761AA73B18D2927B0089195E /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7614E45018D293A000C507F7 /* TestHarness */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7614E47518D293A000C507F7 /* Build configuration list for PBXNativeTarget "TestHarness" */;
+			buildPhases = (
+				7614E44D18D293A000C507F7 /* Sources */,
+				7614E44E18D293A000C507F7 /* Frameworks */,
+				7614E44F18D293A000C507F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestHarness;
+			productName = TestHarness;
+			productReference = 7614E45118D293A000C507F7 /* TestHarness.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		761AA71718D2927B0089195E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = AFF;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = AFApps;
+			};
+			buildConfigurationList = 761AA71A18D2927B0089195E /* Build configuration list for PBXProject "AFFAlertView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 761AA71618D2927B0089195E;
+			productRefGroup = 761AA72018D2927B0089195E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7614E45018D293A000C507F7 /* TestHarness */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7614E44F18D293A000C507F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7614E45A18D293A000C507F7 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7614E44D18D293A000C507F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7614E48218D293CF00C507F7 /* AFFAlertViewButtonModel.m in Sources */,
+				7614E48618D2945900C507F7 /* AFFAlertView.m in Sources */,
+				7614E48918D2955A00C507F7 /* AFFViewController.m in Sources */,
+				7614E46018D293A000C507F7 /* AFFAppDelegate.m in Sources */,
+				7614E45C18D293A000C507F7 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		7614E45818D293A000C507F7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7614E45918D293A000C507F7 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7614E47618D293A000C507F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestHarness/TestHarness-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "TestHarness/TestHarness-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7614E47718D293A000C507F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestHarness/TestHarness-Prefix.pch";
+				INFOPLIST_FILE = "TestHarness/TestHarness-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		761AA74918D2927B0089195E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		761AA74A18D2927B0089195E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7614E47518D293A000C507F7 /* Build configuration list for PBXNativeTarget "TestHarness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7614E47618D293A000C507F7 /* Debug */,
+				7614E47718D293A000C507F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		761AA71A18D2927B0089195E /* Build configuration list for PBXProject "AFFAlertView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				761AA74918D2927B0089195E /* Debug */,
+				761AA74A18D2927B0089195E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 761AA71718D2927B0089195E /* Project object */;
+}
