@@ -8,7 +8,6 @@
 
 #import "AFFAlertView.h"
 #import "AFFAlertViewButtonModel.h"
-#import "AFFAlertViewBlurUIImage+ImageEffects.h"
 
 #pragma mark - Private item subclassing
 /** AFFAlertViewButton is a subclass of UIButton. This is private and used for altering any buttons in the class that belong to the immediate AFFAlertView class. */
@@ -66,9 +65,6 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     
     //Vertical effect
     UIInterpolatingMotionEffect *_motionEffectVertical;
-    
-    //Image capture
-    UIImage                     *_imageCapture;
 }
 
 @end
@@ -81,7 +77,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     CGSize preferredSize = AFFAlertView_DEFAULT_PREFERRED_SIZE;
     
     self = [super initWithFrame:CGRectMake(0, 0, preferredSize.width, preferredSize.height)];
-    if (self) {
+    if(self) {
         
         self.hidden = YES;
         
@@ -244,8 +240,6 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Alert animations
 #pragma mark - Show the alert
 - (void)show {
-    
-    [self applyBlur];
     
     if([_delegate respondsToSelector:@selector(alertViewWillShow:)]) {
         [_delegate alertViewWillShow:self];
@@ -580,6 +574,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     return button;
 }
 
+#pragma mark - Borders
 + (AFFAlertViewBorder *)createTopBorderWithWidth:(CGFloat)width posY:(CGFloat)posY {
     
     AFFAlertViewBorder *border = [AFFAlertView createBorder];
@@ -621,64 +616,6 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     UIGraphicsEndImageContext();
     
     return image;
-}
-
-#pragma mark - Blur
-- (void)applyBlur {
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//
-//        UIImage *imageToBlur  = [self imageWithView:superViewContainer() frame:self.frame];
-//        UIImage *blurredImage = [imageToBlur applyAFFAlertViewBlurUIImageTintEffectWithColor:self.backgroundColor];
-//
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            
-//            self.backgroundColor  = [UIColor colorWithPatternImage:blurredImage];
-//        });
-//    });
-}
-
-+ (UIImage *)screenshotWithView:(UIView *)view frame:(CGRect)frame {
-    
-    UIGraphicsBeginImageContextWithOptions(frame.size, view.opaque, 0.0f);
-    
-    if([view respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]){
-        
-        BOOL aterScreenUpdates = view.superview ? NO : YES;
-        [view drawViewHierarchyInRect:frame afterScreenUpdates:aterScreenUpdates];
-    } else {
-        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    }
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
-+ (UIImage *)imageWithBlur:(UIImage *)image frame:(CGRect)frame {
-    
-    CGFloat scale           = image.scale;
-    CGRect maskFrame        = frame;
-    maskFrame.origin.x      = CGRectGetMinX(frame) * scale;
-    maskFrame.origin.y      = CGRectGetMinY(frame) * scale;
-    maskFrame.size.width    = CGRectGetWidth(maskFrame) * scale;
-    maskFrame.size.height   = CGRectGetHeight(maskFrame) * scale;
-    
-    CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, maskFrame);
-    
-    CGFloat screenScale = [UIScreen mainScreen].scale;
-    UIImage *blurredCroppedArea = [[UIImage imageWithCGImage:imageRef scale:screenScale orientation:image.imageOrientation] applyAFFAlertViewBlur];
-    
-    UIGraphicsBeginImageContextWithOptions(image.size, NO, screenScale);
-    [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
-    [blurredCroppedArea drawInRect:frame];
-    
-    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    CGImageRelease(imageRef);
-    
-    return outputImage;
 }
 
 #pragma mark - Dealloc
