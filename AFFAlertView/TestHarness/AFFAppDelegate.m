@@ -17,7 +17,7 @@
     
     AFFViewController *viewController = [[AFFViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController    = viewController;
-    self.window.backgroundColor       = [UIColor whiteColor];
+    self.window.backgroundColor       = [UIColor redColor];
     [self.window makeKeyAndVisible];
     
     return YES;

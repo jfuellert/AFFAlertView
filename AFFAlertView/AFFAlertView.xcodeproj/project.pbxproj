@@ -16,6 +16,7 @@
 		7614E48218D293CF00C507F7 /* AFFAlertViewButtonModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48018D293CF00C507F7 /* AFFAlertViewButtonModel.m */; };
 		7614E48618D2945900C507F7 /* AFFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48518D2945900C507F7 /* AFFAlertView.m */; };
 		7614E48918D2955A00C507F7 /* AFFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48818D2955A00C507F7 /* AFFViewController.m */; };
+		7614E48D18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614E48C18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		7614E48518D2945900C507F7 /* AFFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFAlertView.m; sourceTree = "<group>"; };
 		7614E48718D2955A00C507F7 /* AFFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFFViewController.h; sourceTree = "<group>"; };
 		7614E48818D2955A00C507F7 /* AFFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFViewController.m; sourceTree = "<group>"; };
+		7614E48B18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFFAlertViewBlurUIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		7614E48C18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFFAlertViewBlurUIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		761AA72218D2927B0089195E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		761AA72418D2927B0089195E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		761AA72618D2927B0089195E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -78,6 +81,7 @@
 		7614E47B18D293CF00C507F7 /* AFFAlertView */ = {
 			isa = PBXGroup;
 			children = (
+				7614E48A18D2C29700C507F7 /* AFAlertViewBlur */,
 				7614E48318D2945900C507F7 /* AFFAlertView */,
 				7614E47E18D293CF00C507F7 /* AFFAlertViewButtonModel */,
 			);
@@ -100,6 +104,15 @@
 				7614E48518D2945900C507F7 /* AFFAlertView.m */,
 			);
 			path = AFFAlertView;
+			sourceTree = "<group>";
+		};
+		7614E48A18D2C29700C507F7 /* AFAlertViewBlur */ = {
+			isa = PBXGroup;
+			children = (
+				7614E48B18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.h */,
+				7614E48C18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.m */,
+			);
+			path = AFAlertViewBlur;
 			sourceTree = "<group>";
 		};
 		761AA71618D2927B0089195E = {
@@ -196,6 +209,7 @@
 			files = (
 				7614E48218D293CF00C507F7 /* AFFAlertViewButtonModel.m in Sources */,
 				7614E48618D2945900C507F7 /* AFFAlertView.m in Sources */,
+				7614E48D18D2C29700C507F7 /* AFFAlertViewBlurUIImage+ImageEffects.m in Sources */,
 				7614E48918D2955A00C507F7 /* AFFViewController.m in Sources */,
 				7614E46018D293A000C507F7 /* AFFAppDelegate.m in Sources */,
 				7614E45C18D293A000C507F7 /* main.m in Sources */,
@@ -328,6 +342,7 @@
 				7614E47718D293A000C507F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		761AA71A18D2927B0089195E /* Build configuration list for PBXProject "AFFAlertView" */ = {
 			isa = XCConfigurationList;

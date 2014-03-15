@@ -8,6 +8,7 @@
 
 #import "AFFAlertView.h"
 #import "AFFAlertViewButtonModel.h"
+#import "AFFAlertViewBlurUIImage+ImageEffects.h"
 
 #pragma mark - Private item subclassing
 /** AFFAlertViewButton is a subclass of UIButton. This is private and used for altering any buttons in the class that belong to the immediate AFFAlertView class. */
@@ -65,6 +66,9 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     
     //Vertical effect
     UIInterpolatingMotionEffect *_motionEffectVertical;
+    
+    //Image capture
+    UIImage                     *_imageCapture;
 }
 
 @end
@@ -107,7 +111,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Background blocker view
 - (void)createBackgroundBlockerView {
     
-    UIView *superView = superViewContainer();
+    UIView *superView = [AFFAlertView superViewContainer];
     
     _backgroundBlockerView                        = [[UIView alloc] initWithFrame:superView.bounds];
     _backgroundBlockerView.backgroundColor        = AFFAlertView_DEFAULT_BACKGROUND_VIEW_COLOR;
@@ -137,12 +141,12 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     
     //Horizontal effect
     _motionEffectHorizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    _motionEffectHorizontal.minimumRelativeValue         = @( - _motionEffectsAmount.x);
+    _motionEffectHorizontal.minimumRelativeValue         = @( -_motionEffectsAmount.x);
     _motionEffectHorizontal.maximumRelativeValue         = @( _motionEffectsAmount.x);
     
     //Vertical effect
     _motionEffectVertical   = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    _motionEffectVertical.minimumRelativeValue           = @( - _motionEffectsAmount.y);
+    _motionEffectVertical.minimumRelativeValue           = @( -_motionEffectsAmount.y);
     _motionEffectVertical.maximumRelativeValue           = @( _motionEffectsAmount.y);
     
     UIMotionEffectGroup *motionEffectGroup              = [[UIMotionEffectGroup alloc] init];
@@ -154,10 +158,10 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Title
 - (void)createTitle:(NSString *)title {
     
-    _titleLabel       = createLabel(title, kAFFAlertView_DefaultTitleFontSize, YES);
+    _titleLabel       = [AFFAlertView createLabel:title fontSize:kAFFAlertView_DefaultTitleFontSize bold:YES];
     
     //Frame
-    CGRect frame      = boundingRectForLabel(_titleLabel, CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2));
+    CGRect frame      = [AFFAlertView boundingRectForLabel:_titleLabel maxWidth:CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2)];
     frame.size.width  = CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2);
     frame.origin.x    = kAFFAlertView_DefaultTitleMessagePadding;
     frame.origin.y    = kAFFAlertView_DefaultTopTitlePadding;
@@ -169,10 +173,10 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Message
 - (void)createMessage:(NSString *)message {
     
-    _messageLabel     = createLabel(message, kAFFAlertView_DefaultMessageFontSize, NO);
+    _messageLabel     = [AFFAlertView createLabel:message fontSize:kAFFAlertView_DefaultTitleFontSize bold:NO];
     
     //Frame
-    CGRect frame      = boundingRectForLabel(_messageLabel, CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2));
+    CGRect frame      = [AFFAlertView boundingRectForLabel:_messageLabel maxWidth:CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2)];
     frame.size.width  = CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2);
     frame.origin.x    = kAFFAlertView_DefaultTitleMessagePadding;
     frame.origin.y    = CGRectGetMaxY(_titleLabel.frame) + kAFFAlertView_DefaultTopMessagePadding;
@@ -202,18 +206,18 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     for(NSString *title in buttonTitleArray) {
         
         //Create button
-        AFFAlertViewButton *button = createButton(title, index, maxButtonCount, containerRect, index == 0);
+        AFFAlertViewButton *button = [AFFAlertView createButton:title index:index maxButtonCount:maxButtonCount containerRect:containerRect isNotBold:index == 0];
         [button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         [self insertSubview:button atIndex:0];
 
         //Create right border for button
         if(index < maxButtonCount - 1) {
-            [self addSubview:createRightBorder(CGRectGetMaxX(button.frame), CGRectGetMinY(button.frame),  CGRectGetHeight(button.frame))];
+            [self addSubview:[AFFAlertView createRightBorderWithPosX:CGRectGetMaxX(button.frame) posY:CGRectGetMinY(button.frame) height:CGRectGetHeight(button.frame)]];
         }
         
         //Create the top border
         if(index == 0) {
-            [self addSubview:createTopBorder(CGRectGetWidth(self.bounds), CGRectGetMinY(button.frame))];
+            [self addSubview:[AFFAlertView createTopBorderWithWidth:CGRectGetWidth(self.bounds) posY:CGRectGetMinY(button.frame)]];
         }
         
         //Increment index
@@ -241,6 +245,8 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Show the alert
 - (void)show {
     
+    [self applyBlur];
+    
     if([_delegate respondsToSelector:@selector(alertViewWillShow:)]) {
         [_delegate alertViewWillShow:self];
     }
@@ -248,28 +254,28 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     //Frame
     CGRect initialFrame;
     
-    UIView *containerView           = superViewContainer();
+    UIView *containerView           = [AFFAlertView superViewContainer];
     CGRect selfFrame                = self.frame;
     CGRect containerViewFrame       = _backgroundBlockerView.frame;
     CATransform3D currentTransform  = self.layer.transform;
     
     switch(_animationDirection) {
         case AFFAlertViewAnimationFromDirection_Center:
-            initialFrame     = centerFrame(selfFrame, containerViewFrame);
+            initialFrame     = [AFFAlertView centerFrame:selfFrame containerFrame:containerViewFrame];
             currentTransform = CATransform3DMakeScale(1.25f, 1.25f, 1.0f);
             self.alpha       = 0.0f;
             break;
         case AFFAlertViewAnimationFromDirection_Top:
-            initialFrame = topFrame(selfFrame, containerViewFrame);
+            initialFrame     = [AFFAlertView topFrame:selfFrame containerFrame:containerViewFrame];
             break;
         case AFFAlertViewAnimationFromDirection_Bottom:
-            initialFrame = bottomFrame(selfFrame, containerViewFrame);
+            initialFrame     = [AFFAlertView bottomFrame:selfFrame containerFrame:containerViewFrame];
             break;
         case AFFAlertViewAnimationFromDirection_Right:
-            initialFrame = rightFrame(selfFrame, containerViewFrame);
+            initialFrame     = [AFFAlertView rightFrame:selfFrame containerFrame:containerViewFrame];
             break;
         case AFFAlertViewAnimationFromDirection_Left:
-            initialFrame = leftFrame(selfFrame, containerViewFrame);
+            initialFrame     = [AFFAlertView leftFrame:selfFrame containerFrame:containerViewFrame];
             break;
         default:
             break;
@@ -289,7 +295,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     //Animate
     [UIView animateWithDuration:_showDuration delay:0.0f options:_showAnimationOptions animations:^{
         
-        self.frame                   = centerFrame(self.frame, _backgroundBlockerView.frame);
+        self.frame                   = [AFFAlertView centerFrame:self.frame containerFrame:_backgroundBlockerView.frame];
         self.layer.transform         = CATransform3DMakeScale(1.0f, 1.0f, 1.0f);
         self.alpha                   = 1.0f;
         _backgroundBlockerView.alpha = 1.0f;
@@ -320,7 +326,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 
     switch(_animationDirection) {
         case AFFAlertViewAnimationFromDirection_Center:
-            dismissFrame = centerFrame(selfFrame, containerViewFrame);
+            dismissFrame = [AFFAlertView centerFrame:selfFrame containerFrame:containerViewFrame];
             alpha        = 0.0f;
             
             CGFloat startRotation = [[self valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
@@ -330,16 +336,16 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
             
             break;
         case AFFAlertViewAnimationFromDirection_Top:
-            dismissFrame = topFrame(selfFrame, containerViewFrame);
+            dismissFrame     = [AFFAlertView topFrame:selfFrame containerFrame:containerViewFrame];
             break;
         case AFFAlertViewAnimationFromDirection_Bottom:
-            dismissFrame = bottomFrame(selfFrame, containerViewFrame);
+            dismissFrame     = [AFFAlertView bottomFrame:selfFrame containerFrame:containerViewFrame];
             break;
         case AFFAlertViewAnimationFromDirection_Right:
-            dismissFrame = rightFrame(selfFrame, containerViewFrame);
+            dismissFrame     = [AFFAlertView rightFrame:selfFrame containerFrame:containerViewFrame];
             break;
         case AFFAlertViewAnimationFromDirection_Left:
-            dismissFrame = leftFrame(selfFrame, containerViewFrame);
+            dismissFrame     = [AFFAlertView leftFrame:selfFrame containerFrame:containerViewFrame];
             break;
         default:
             break;
@@ -411,7 +417,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     
     //Buttons
     //Button selected background color image
-    UIImage *selectedBackgroundImage = imageWithColor(_borderColor);
+    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:_borderColor];
     
     for(AFFAlertViewButton *button in self.subviews) {
         if([button isKindOfClass:[AFFAlertViewButton class]]) {
@@ -448,7 +454,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 
 #pragma mark - Superview and frames
 #pragma mark - Superview
-UIView *superViewContainer(void) {
++ (UIView *)superViewContainer {
     
     UIView *rootView = [[[[[UIApplication sharedApplication] delegate] window] subviews] firstObject];
     
@@ -456,7 +462,7 @@ UIView *superViewContainer(void) {
 }
 
 #pragma mark - Alert frames
-CGRect centerFrame(CGRect viewFrame, CGRect containerFrame) {
++ (CGRect)centerFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
     
     CGFloat posX = (CGRectGetWidth(containerFrame) - CGRectGetWidth(viewFrame)) * 0.5f;
     CGFloat posY = (CGRectGetHeight(containerFrame) - CGRectGetHeight(viewFrame)) * 0.5f;
@@ -466,7 +472,7 @@ CGRect centerFrame(CGRect viewFrame, CGRect containerFrame) {
     return frame;
 }
 
-CGRect topFrame(CGRect viewFrame, CGRect containerFrame) {
++ (CGRect)topFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
     
     CGFloat posX = (CGRectGetWidth(containerFrame) - CGRectGetWidth(viewFrame)) * 0.5f;
     CGFloat posY = - CGRectGetHeight(viewFrame);
@@ -476,7 +482,7 @@ CGRect topFrame(CGRect viewFrame, CGRect containerFrame) {
     return frame;
 }
 
-CGRect bottomFrame(CGRect viewFrame, CGRect containerFrame) {
++ (CGRect)bottomFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
     
     CGFloat posX = (CGRectGetWidth(containerFrame) - CGRectGetWidth(viewFrame)) * 0.5f;
     CGFloat posY = CGRectGetHeight(containerFrame);
@@ -486,7 +492,7 @@ CGRect bottomFrame(CGRect viewFrame, CGRect containerFrame) {
     return frame;
 }
 
-CGRect leftFrame(CGRect viewFrame, CGRect containerFrame) {
++ (CGRect)leftFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
     
     CGFloat posX = - CGRectGetWidth(containerFrame);
     CGFloat posY = (CGRectGetHeight(containerFrame) - CGRectGetHeight(viewFrame)) * 0.5f;
@@ -496,7 +502,7 @@ CGRect leftFrame(CGRect viewFrame, CGRect containerFrame) {
     return frame;
 }
 
-CGRect rightFrame(CGRect viewFrame, CGRect containerFrame) {
++ (CGRect)rightFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
     
     CGFloat posX = CGRectGetWidth(containerFrame);
     CGFloat posY = (CGRectGetHeight(containerFrame) - CGRectGetHeight(viewFrame)) * 0.5f;
@@ -507,7 +513,7 @@ CGRect rightFrame(CGRect viewFrame, CGRect containerFrame) {
 }
 
 #pragma mark - Utilities
-UILabel *createLabel(NSString *title, CGFloat fontSize, BOOL bold) {
++ (UILabel *)createLabel:(NSString *)title fontSize:(CGFloat)fontSize bold:(BOOL)bold {
     
     UIFont *font = (bold) ? [UIFont boldSystemFontOfSize:fontSize] : [UIFont systemFontOfSize:fontSize];
     
@@ -523,7 +529,7 @@ UILabel *createLabel(NSString *title, CGFloat fontSize, BOOL bold) {
     return label;
 }
 
-CGRect boundingRectForLabel(UILabel *label, CGFloat maxWidth) {
++ (CGRect)boundingRectForLabel:(UILabel *)label maxWidth:(CGFloat)maxWidth {
     
     CGSize maxSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
     CGRect boundingRect;
@@ -539,13 +545,13 @@ CGRect boundingRectForLabel(UILabel *label, CGFloat maxWidth) {
     return boundingRect;
 }
 
-AFFAlertViewButton *createButton(NSString *title, NSUInteger index, NSUInteger maxButtonCount, CGRect containerRect, BOOL isNotBold) {
++ (AFFAlertViewButton *)createButton:(NSString *)title index:(NSUInteger)index maxButtonCount:(NSUInteger) maxButtonCount containerRect:(CGRect)containerRect isNotBold:(BOOL)isNotBold {
     
     //Button background color image
-    UIImage *backgroundImage = imageWithColor([UIColor clearColor]);
+    UIImage *backgroundImage = [AFFAlertView imageWithColor:[UIColor clearColor]];
     
     //Button selected background color image
-    UIImage *selectedBackgroundImage = imageWithColor(AFFAlertView_DEFAULT_BORDER_COLOR);
+    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:AFFAlertView_DEFAULT_BORDER_COLOR];
     
     //Frame
     CGFloat width  = CGRectGetWidth(containerRect) / maxButtonCount;
@@ -574,25 +580,25 @@ AFFAlertViewButton *createButton(NSString *title, NSUInteger index, NSUInteger m
     return button;
 }
 
-AFFAlertViewBorder *createTopBorder(CGFloat width, CGFloat posY) {
++ (AFFAlertViewBorder *)createTopBorderWithWidth:(CGFloat)width posY:(CGFloat)posY {
     
-    AFFAlertViewBorder *border = createBorder();
-    border.frame              = CGRectMake(CGRectGetWidth(border.frame), posY, width - (CGRectGetWidth(border.frame) * 2), CGRectGetHeight(border.frame));
-    border.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    AFFAlertViewBorder *border = [AFFAlertView createBorder];
+    border.frame               = CGRectMake(CGRectGetWidth(border.frame), posY, width - (CGRectGetWidth(border.frame) * 2), CGRectGetHeight(border.frame));
+    border.autoresizingMask    = UIViewAutoresizingFlexibleWidth;
     
     return border;
 }
 
-AFFAlertViewBorder *createRightBorder(CGFloat posX, CGFloat posY, CGFloat height) {
++ (AFFAlertViewBorder *)createRightBorderWithPosX:(CGFloat)posX posY:(CGFloat)posY height:(CGFloat)height {
     
-    AFFAlertViewBorder *border = createBorder();
-    border.frame              = CGRectMake(posX - CGRectGetWidth(border.frame), posY + CGRectGetHeight(border.frame), CGRectGetWidth(border.frame), height - (CGRectGetHeight(border.frame) * 2));
+    AFFAlertViewBorder *border = [AFFAlertView createBorder];
+    border.frame               = CGRectMake(posX - CGRectGetWidth(border.frame), posY + CGRectGetHeight(border.frame), CGRectGetWidth(border.frame), height - (CGRectGetHeight(border.frame) * 2));
     
     return border;
 }
 
 /** Returns a 1x1 border. */
-AFFAlertViewBorder *createBorder() {
++ (AFFAlertViewBorder *)createBorder {
     
     AFFAlertViewBorder *border                = [[AFFAlertViewBorder alloc] initWithFrame:CGRectMake(0, 0, kAFFAlertView_DefaultRoundedBorderWith, kAFFAlertView_DefaultRoundedBorderWith)];
     border.backgroundColor                   = AFFAlertView_DEFAULT_BORDER_COLOR;
@@ -601,7 +607,7 @@ AFFAlertViewBorder *createBorder() {
     return border;
 }
 
-UIImage *imageWithColor(UIColor *color) {
++ (UIImage *)imageWithColor:(UIColor *)color {
     
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     
@@ -615,6 +621,64 @@ UIImage *imageWithColor(UIColor *color) {
     UIGraphicsEndImageContext();
     
     return image;
+}
+
+#pragma mark - Blur
+- (void)applyBlur {
+    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//
+//        UIImage *imageToBlur  = [self imageWithView:superViewContainer() frame:self.frame];
+//        UIImage *blurredImage = [imageToBlur applyAFFAlertViewBlurUIImageTintEffectWithColor:self.backgroundColor];
+//
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            
+//            self.backgroundColor  = [UIColor colorWithPatternImage:blurredImage];
+//        });
+//    });
+}
+
++ (UIImage *)screenshotWithView:(UIView *)view frame:(CGRect)frame {
+    
+    UIGraphicsBeginImageContextWithOptions(frame.size, view.opaque, 0.0f);
+    
+    if([view respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]){
+        
+        BOOL aterScreenUpdates = view.superview ? NO : YES;
+        [view drawViewHierarchyInRect:frame afterScreenUpdates:aterScreenUpdates];
+    } else {
+        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    }
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
++ (UIImage *)imageWithBlur:(UIImage *)image frame:(CGRect)frame {
+    
+    CGFloat scale           = image.scale;
+    CGRect maskFrame        = frame;
+    maskFrame.origin.x      = CGRectGetMinX(frame) * scale;
+    maskFrame.origin.y      = CGRectGetMinY(frame) * scale;
+    maskFrame.size.width    = CGRectGetWidth(maskFrame) * scale;
+    maskFrame.size.height   = CGRectGetHeight(maskFrame) * scale;
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, maskFrame);
+    
+    CGFloat screenScale = [UIScreen mainScreen].scale;
+    UIImage *blurredCroppedArea = [[UIImage imageWithCGImage:imageRef scale:screenScale orientation:image.imageOrientation] applyAFFAlertViewBlur];
+    
+    UIGraphicsBeginImageContextWithOptions(image.size, NO, screenScale);
+    [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [blurredCroppedArea drawInRect:frame];
+    
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CGImageRelease(imageRef);
+    
+    return outputImage;
 }
 
 #pragma mark - Dealloc
