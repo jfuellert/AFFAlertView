@@ -450,7 +450,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Superview
 + (UIView *)superViewContainer {
     
-    UIView *rootView = [[[[[UIApplication sharedApplication] delegate] window] subviews] firstObject];
+    UIView *rootView = [[[[[UIApplication sharedApplication] delegate] window] rootViewController] view];
     
     return rootView;
 }
