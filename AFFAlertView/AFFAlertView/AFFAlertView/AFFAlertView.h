@@ -11,6 +11,20 @@
 @class AFFAlertView;
 @class AFFAlertViewButtonModel;
 
+//Styles
+typedef NS_OPTIONS(NSUInteger, AFFAlertViewStyle) {
+    
+    /** The default AFFAlertView style. This style provides the alert view with read-only text. */
+    AFFAlertViewStyle_Default           = 0,
+    
+    /** This style provides the alert view with a plain text input field. */
+    AFFAlertViewStyle_PlainTextInput    = 1 << 0,
+    
+    /** This style provides the alert view with a secure text input field. */
+    AFFAlertViewStyle_SecureTextInput   = 1 << 1
+};
+
+//Animations
 typedef NS_ENUM(NSUInteger, AFFAlertViewAnimationFromDirection){
     
     /** Animates the view to and from the center with an alpha animation. This closely resembles the default iOS 7 UIAlertView animation. */
@@ -69,20 +83,20 @@ NS_CLASS_AVAILABLE_IOS(5_0) @interface AFFAlertView : UIView
 @property (nonatomic, assign) AFFAlertViewAnimationFromDirection animationDirection;
 
 /** The animation amount for motion effects if UIMotionEffects are available. Default value is '{25.0f, 25.0f}'. */
-@property (nonatomic, assign) CGPoint motionEffectsAmount;
+@property (nonatomic, assign) CGPoint motionEffectsAmount NS_AVAILABLE_IOS(7_0);
 
 #pragma mark - Text properties
-/** Returns title label. Default title color is '[UIColor blackColor]'. */
+/** Returns the title label. */
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
 
-/** Returns message label. Default title color is '[UIColor blackColor]'. */
+/** Returns the message label. */
 @property (nonatomic, strong, readonly) UILabel *messageLabel;
 
-/** The text color for the buttons. Default is '[UIColor colorWithRed:0.0f/255.0f green:122.0f/255.0f blue:255.0f/255.0f alpha:1.0f]'. */
-@property (nonatomic, assign) UIColor *buttonTextColor;
+/** Returns the plain text field. This will always return nil unless the AFFAlertViewStyle contains AFFAlertViewStyle_PlainTextInput. */
+@property (nonatomic, strong, readonly) UITextField *plainTextField;
 
-/** The selected state text color for the buttons. Default is '[UIColor colorWithRed:15.0f/255.0f green:124.0f/255.0f blue:255.0f/255.0f alpha:1.0f]'. */
-@property (nonatomic, assign) UIColor *selectedStateButtonTextColor;
+/** Returns the secure text field. This will always return nil unless the AFFAlertViewStyle contains AFFAlertViewStyle_SecureTextInput. */
+@property (nonatomic, strong, readonly) UITextField *secureTextField;
 
 #pragma mark - Background overlay properties
 /** Returns the background overlay blocker view that is presented behind the alert view. Default color is '[UIColor colorWithWhite:0.0f alpha:0.45f]'. */
@@ -92,16 +106,28 @@ NS_CLASS_AVAILABLE_IOS(5_0) @interface AFFAlertView : UIView
 /** The text color for the buttions. Default is '[UIColor colorWithWhite:0.0f alpha:0.2f]'. */
 @property (nonatomic, assign) UIColor *borderColor;
 
+/** The text color for the buttons. Default is '[UIColor colorWithRed:0.0f/255.0f green:122.0f/255.0f blue:255.0f/255.0f alpha:1.0f]'. */
+@property (nonatomic, assign) UIColor *buttonTextColor;
+
+/** The selected state text color for the buttons. Default is '[UIColor colorWithRed:15.0f/255.0f green:124.0f/255.0f blue:255.0f/255.0f alpha:1.0f]'. */
+@property (nonatomic, assign) UIColor *selectedStateButtonTextColor;
+
+/** The button downstate image. Default is a slightly darker color than self.background color. */
+@property (nonatomic, assign) UIColor *selectedStateButtonBackgroundColor;
+
 #pragma mark - Misc properties
-/** Returns whether or not the device has motion effects. */
-@property (nonatomic, readonly) BOOL hasMotionEffects;
+/** Returns a BOOL whether or not the alert view is being presented. */
+@property (nonatomic, readonly) BOOL isBeingPresented;
 
 /** The AFFAlertView delegate object. */
 @property (nonatomic, weak) id<AFFAlertViewDelegate> delegate;
 
 #pragma mark - Init
-/** Returns a new AFFAlertView. */
+/** Returns a new AFFAlertView with the default AFFAlertView style. */
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message buttonTitles:(NSArray *)buttonTitles;
+
+/** Returns a new AFFAlertView with a specific AFFAlertView style. */
+- (instancetype)initWithStyle:(AFFAlertViewStyle)style title:(NSString *)title message:(NSString *)message buttonTitles:(NSArray *)buttonTitles;
 
 #pragma mark - Show the alert
 /** Shows the alert view. */
