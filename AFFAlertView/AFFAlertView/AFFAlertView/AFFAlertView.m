@@ -34,26 +34,27 @@ const CGFloat kAFFAlertView_DefaultDismssAnimationOptions = UIViewAnimationOptio
 const CGFloat kAFFAlertView_DefaultMotionEffectsAmount    = 10.0f;
 
 //Padding
-const CGFloat kAFFAlertView_DefaultTopTitlePadding        = 19.0f;
+const CGFloat kAFFAlertView_DefaultTopTitlePadding        = 18.5f;
 const CGFloat kAFFAlertView_DefaultTopMessagePadding      = 5.0f;
-const CGFloat kAFFAlertView_DefaultTitleMessagePadding    = 10.0f;
+const CGFloat kAFFAlertView_DefaultTitleMessagePadding    = 9.5f;
 const CGFloat kAFFAlertView_DefaultButtonHeight           = 44.5f;
 
 //Border radius
 const CGFloat kAFFAlertView_DefaultRoundedCornerRadius    = 7.0f;
-const CGFloat kAFFAlertView_DefaultRoundedBorderWith      = 0.5f;
+const CGFloat kAFFAlertView_DefaultRoundedBorderWidth     = 0.5f;
 
 //Font sizing
 const CGFloat kAFFAlertView_DefaultTitleFontSize          = 17.0f;
 const CGFloat kAFFAlertView_DefaultMessageFontSize        = 14.0f;
-const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
+const CGFloat kAFFAlertView_DefaultButtonFontSize         = 17.0f;
 
 //Colors
 #define AFFAlertView_DEFAULT_TEXT_COLOR                  [UIColor blackColor]
-#define AFFAlertView_DEFAULT_SELF_VIEW_COLOR             [UIColor colorWithRed:229.0f/255.0f green:229.0f/255.0f blue:229.0f/255.0f alpha:0.97f]
+#define AFFAlertView_DEFAULT_SELF_VIEW_COLOR             [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:0.97f]
 #define AFFAlertView_DEFAULT_BACKGROUND_VIEW_COLOR       [UIColor colorWithWhite:0.0f alpha:0.35f]
 #define AFFAlertView_DEFAULT_BORDER_COLOR                [UIColor colorWithWhite:0.0f alpha:0.18f]
 #define AFFAlertView_DEFAULT_BUTTON_TEXT_COLOR           [UIColor colorWithRed:0.0f/255.0f green:122.0f/255.0f blue:255.0f/255.0f alpha:1.0f]
+const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 
 //Preferred size
 #define AFFAlertView_DEFAULT_PREFERRED_SIZE              CGSizeMake(270.0f, 124.0f)
@@ -125,7 +126,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     //Border and radius
     self.layer.masksToBounds = YES;
     self.layer.borderColor   = AFFAlertView_DEFAULT_BORDER_COLOR.CGColor;
-    self.layer.borderWidth   = kAFFAlertView_DefaultRoundedBorderWith;
+    self.layer.borderWidth   = kAFFAlertView_DefaultRoundedBorderWidth;
     self.layer.cornerRadius  = kAFFAlertView_DefaultRoundedCornerRadius;
 }
 
@@ -169,7 +170,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 #pragma mark - Message
 - (void)createMessage:(NSString *)message {
     
-    _messageLabel     = [AFFAlertView createLabel:message fontSize:kAFFAlertView_DefaultTitleFontSize bold:NO];
+    _messageLabel     = [AFFAlertView createLabel:message fontSize:kAFFAlertView_DefaultMessageFontSize bold:NO];
     
     //Frame
     CGRect frame      = [AFFAlertView boundingRectForLabel:_messageLabel maxWidth:CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2)];
@@ -202,7 +203,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     for(NSString *title in buttonTitleArray) {
         
         //Create button
-        AFFAlertViewButton *button = [AFFAlertView createButton:title index:index maxButtonCount:maxButtonCount containerRect:containerRect isNotBold:index == 0];
+        AFFAlertViewButton *button = [self createButton:title index:index maxButtonCount:maxButtonCount containerRect:containerRect isNotBold:index == 0];
         [button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         [self insertSubview:button atIndex:0];
 
@@ -394,6 +395,22 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     return hasMotionEffects;
 }
 
+#pragma mark - Background color
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    
+    //Button selected background color image
+    UIColor *lighterBackgroundColor  = [AFFAlertView darkerColor:backgroundColor];
+    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:lighterBackgroundColor];
+    
+    for(AFFAlertViewButton *button in self.subviews) {
+        if([button isKindOfClass:[AFFAlertViewButton class]]) {
+            
+            [button setBackgroundImage:selectedBackgroundImage forState:UIControlStateHighlighted];
+        }
+    }
+}
+
 #pragma mark - Border color
 - (void)setBorderColor:(UIColor *)borderColor {
     
@@ -408,17 +425,6 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     
     //Alert view border
     self.layer.borderColor = _borderColor.CGColor;
-    
-    //Buttons
-    //Button selected background color image
-    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:_borderColor];
-    
-    for(AFFAlertViewButton *button in self.subviews) {
-        if([button isKindOfClass:[AFFAlertViewButton class]]) {
-            
-            [button setBackgroundImage:selectedBackgroundImage forState:UIControlStateHighlighted];
-        }
-    }
 }
 
 #pragma mark - Button text color
@@ -539,22 +545,23 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     return boundingRect;
 }
 
-+ (AFFAlertViewButton *)createButton:(NSString *)title index:(NSUInteger)index maxButtonCount:(NSUInteger) maxButtonCount containerRect:(CGRect)containerRect isNotBold:(BOOL)isNotBold {
+- (AFFAlertViewButton *)createButton:(NSString *)title index:(NSUInteger)index maxButtonCount:(NSUInteger) maxButtonCount containerRect:(CGRect)containerRect isNotBold:(BOOL)isNotBold {
     
     //Button background color image
     UIImage *backgroundImage = [AFFAlertView imageWithColor:[UIColor clearColor]];
     
     //Button selected background color image
-    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:AFFAlertView_DEFAULT_BORDER_COLOR];
+    UIColor *lighterBackgroundColor  = [AFFAlertView darkerColor:self.backgroundColor];
+    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:lighterBackgroundColor];
     
     //Frame
-    CGFloat width  = CGRectGetWidth(containerRect) / maxButtonCount;
+    CGFloat width  = (CGRectGetWidth(containerRect) / maxButtonCount) + kAFFAlertView_DefaultRoundedBorderWidth;
     CGFloat height = kAFFAlertView_DefaultButtonHeight;
-    CGFloat posX   = width * index;
+    CGFloat posX   = (width * index) - kAFFAlertView_DefaultRoundedBorderWidth;
     CGFloat posY   = CGRectGetHeight(containerRect) - height;
     
     //Create button
-    AFFAlertViewButton *button     = [[AFFAlertViewButton alloc] initWithFrame:CGRectMake(posX - kAFFAlertView_DefaultRoundedBorderWith, posY, width + kAFFAlertView_DefaultRoundedBorderWith, height)];
+    AFFAlertViewButton *button     = [[AFFAlertViewButton alloc] initWithFrame:CGRectMake(posX, posY, width, height)];
     button.backgroundColor        = [UIColor clearColor];
     button.tag                    = index;
     button.autoresizingMask       = UIViewAutoresizingFlexibleTopMargin;
@@ -563,6 +570,9 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:AFFAlertView_DEFAULT_BUTTON_TEXT_COLOR forState:UIControlStateNormal];
     [button setTitleColor:AFFAlertView_DEFAULT_BUTTON_TEXT_COLOR forState:UIControlStateHighlighted];
+    
+    //Create button title edge insets
+    button.titleEdgeInsets = UIEdgeInsetsMake(kAFFAlertView_DefaultRoundedBorderWidth * 2, 0, kAFFAlertView_DefaultRoundedBorderWidth, 0);
     
     //Set button bolding
     if(isNotBold) {
@@ -595,7 +605,7 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
 /** Returns a 1x1 border. */
 + (AFFAlertViewBorder *)createBorder {
     
-    AFFAlertViewBorder *border                = [[AFFAlertViewBorder alloc] initWithFrame:CGRectMake(0, 0, kAFFAlertView_DefaultRoundedBorderWith, kAFFAlertView_DefaultRoundedBorderWith)];
+    AFFAlertViewBorder *border                = [[AFFAlertViewBorder alloc] initWithFrame:CGRectMake(0, 0, kAFFAlertView_DefaultRoundedBorderWidth, kAFFAlertView_DefaultRoundedBorderWidth)];
     border.backgroundColor                   = AFFAlertView_DEFAULT_BORDER_COLOR;
     border.userInteractionEnabled            = NO;
     
@@ -616,6 +626,17 @@ const CGFloat kAFFAlertView_DefaultButtonFontSize         = 16.0f;
     UIGraphicsEndImageContext();
     
     return image;
+}
+
++ (UIColor *)darkerColor:(UIColor *)color {
+    
+    CGFloat h, s, b, a;
+    if([color getHue:&h saturation:&s brightness:&b alpha:&a]) {
+        
+        return [UIColor colorWithHue:h saturation:s brightness:b * kAFFAlertView_DarkerColorPercentage alpha:a];
+    }
+    
+    return nil;
 }
 
 #pragma mark - Dealloc

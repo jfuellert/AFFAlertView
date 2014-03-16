@@ -89,7 +89,7 @@ NS_CLASS_AVAILABLE_IOS(5_0) @interface AFFAlertView : UIView
 @property (nonatomic, strong, readonly) UIView *backgroundBlockerView;
 
 #pragma mark - Color properties
-/** The text color for the buttions. This also sets the selected background color of the button to match the border. Default is '[UIColor colorWithWhite:0.0f alpha:0.2f]'. */
+/** The text color for the buttions. Default is '[UIColor colorWithWhite:0.0f alpha:0.2f]'. */
 @property (nonatomic, assign) UIColor *borderColor;
 
 #pragma mark - Misc properties
