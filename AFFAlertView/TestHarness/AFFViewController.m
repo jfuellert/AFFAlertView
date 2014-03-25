@@ -37,10 +37,11 @@
 - (void)showAlertView {
     
 //    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Title here", nil) message:NSLocalizedString(@"Message here", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Okay", nil), nil];
-//    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+//    alertView.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
     
         
-    AFFAlertView *alertView = [[AFFAlertView alloc] initWithStyle:AFFAlertViewStyle_Default title:NSLocalizedString(@"Title here", nil) message:NSLocalizedString(@"Message here", nil) buttonTitles:@[NSLocalizedString(@"Cancel", nil), NSLocalizedString(@"Okay", nil)]];
+    AFFAlertView *alertView = [[AFFAlertView alloc] initWithStyle:AFFAlertViewStyle_PlainTextInput | AFFAlertViewStyle_SecureTextInput title:NSLocalizedString(@"Title here", nil) message:NSLocalizedString(@"Message here", nil) buttonTitles:@[NSLocalizedString(@"Cancel", nil), NSLocalizedString(@"Okay", nil)]];
+    
     alertView.delegate      = self;
     [alertView show];
 }

@@ -24,37 +24,49 @@
 @implementation AFFAlertViewBorder
 @end
 
+/** AFFAlertViewTextField is a subclass of UITextField. This is private and used for altering any textfields in the class that belong to the immediate AFFAlertView class. */
+@interface AFFAlertViewTextField : UITextField
+@end
+
+@implementation AFFAlertViewTextField
+@end
+
 #pragma mark - Constants
 //Animations
-const CGFloat kAFFAlertView_DefaultShowDuration           = 0.3f;
-const CGFloat kAFFAlertView_DefaultShowAnimationOptions   = UIViewAnimationOptionCurveEaseInOut;
-const CGFloat kAFFAlertView_DefaultDismissDuration        = 0.3f;
-const CGFloat kAFFAlertView_DefaultDismssAnimationOptions = UIViewAnimationOptionCurveEaseInOut;
+const CGFloat kAFFAlertView_DefaultShowDuration                        = 0.3f;
+const CGFloat kAFFAlertView_DefaultShowAnimationOptions                = UIViewAnimationOptionCurveEaseInOut;
+const CGFloat kAFFAlertView_DefaultDismissDuration                     = 0.3f;
+const CGFloat kAFFAlertView_DefaultDismssAnimationOptions              = UIViewAnimationOptionCurveEaseInOut;
 
-const CGFloat kAFFAlertView_DefaultMotionEffectsAmount    = 10.0f;
+const CGFloat kAFFAlertView_DefaultMotionEffectsAmount                 = 10.0f;
 
 //Padding
-const CGFloat kAFFAlertView_DefaultTopTitlePadding        = 18.5f;
-const CGFloat kAFFAlertView_DefaultTopMessagePadding      = 5.0f;
-const CGFloat kAFFAlertView_DefaultTitleMessagePadding    = 9.5f;
-const CGFloat kAFFAlertView_DefaultButtonHeight           = 44.5f;
+const CGFloat kAFFAlertView_DefaultTopTitlePadding                     = 18.5f;
+const CGFloat kAFFAlertView_DefaultTopMessagePadding                   = 5.0f;
+const CGFloat kAFFAlertView_DefaultTitleMessagePadding                 = 9.5f;
+const CGFloat kAFFAlertView_DefaultButtonHeight                        = 44.5f;
 
 //Border radius
-const CGFloat kAFFAlertView_DefaultRoundedCornerRadius    = 7.0f;
-const CGFloat kAFFAlertView_DefaultRoundedBorderWidth     = 0.5f;
+const CGFloat kAFFAlertView_DefaultRoundedCornerRadius                 = 7.0f;
+const CGFloat kAFFAlertView_DefaultRoundedBorderWidth                  = 0.5f;
 
 //Font sizing
-const CGFloat kAFFAlertView_DefaultTitleFontSize          = 17.0f;
-const CGFloat kAFFAlertView_DefaultMessageFontSize        = 14.0f;
-const CGFloat kAFFAlertView_DefaultButtonFontSize         = 17.0f;
+const CGFloat kAFFAlertView_DefaultTitleFontSize                       = 17.0f;
+const CGFloat kAFFAlertView_DefaultMessageFontSize                     = 14.0f;
+const CGFloat kAFFAlertView_DefaultButtonFontSize                      = 17.0f;
 
 //Textfeild sizing
-const CGFloat kAFFAlertView_DefaultInputFieldHeight       = 30.0f;
-const CGFloat kAFFAlertView_DefaultInputFieldPadding      = 12.0f;
+const CGFloat kAFFAlertView_DefaultInputFieldHeight                    = 30.0f;
+const CGFloat kAFFAlertView_DefaultInputFieldPadding                   = 15.0f;
+const CGFloat kAFFAlertView_DefaultInputFieldViewPadding               = 5.0f;
+
+//Textfield borders
+const CGFloat kAFFAlertView_DefaultInputFieldBorderRoundedCornerRadius = 7.0f;
+const CGFloat kAFFAlertView_DefaultInputFieldBorderWidth               = 0.5f;
 
 //Colors
 #define AFFAlertView_DEFAULT_TEXT_COLOR                  [UIColor blackColor]
-#define AFFAlertView_DEFAULT_SELF_VIEW_COLOR             [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:0.97f]
+#define AFFAlertView_DEFAULT_SELF_VIEW_COLOR             [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:0.98f]
 #define AFFAlertView_DEFAULT_BACKGROUND_VIEW_COLOR       [UIColor colorWithWhite:0.0f alpha:0.35f]
 #define AFFAlertView_DEFAULT_BORDER_COLOR                [UIColor colorWithWhite:0.0f alpha:0.18f]
 #define AFFAlertView_DEFAULT_BUTTON_TEXT_COLOR           [UIColor colorWithRed:0.0f/255.0f green:122.0f/255.0f blue:255.0f/255.0f alpha:1.0f]
@@ -110,6 +122,9 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         //Notifications
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        
+        //Resizing mask
+        self.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
         
         //Create view components
         [self createBackgroundBlockerView];
@@ -182,7 +197,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     frame.size.width  = CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2);
     frame.origin.x    = kAFFAlertView_DefaultTitleMessagePadding;
     frame.origin.y    = kAFFAlertView_DefaultTopTitlePadding;
-    _titleLabel.frame = frame;
+    _titleLabel.frame = CGRectIntegral(frame);
     
     [self addSubview:_titleLabel];
 }
@@ -190,14 +205,14 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 #pragma mark - Message
 - (void)createMessage:(NSString *)message {
     
-    _messageLabel     = [AFFAlertView createLabel:message fontSize:kAFFAlertView_DefaultMessageFontSize bold:NO];
-    
+    _messageLabel       = [AFFAlertView createLabel:message fontSize:kAFFAlertView_DefaultMessageFontSize bold:NO];
+
     //Frame
-    CGRect frame      = [AFFAlertView boundingRectForLabel:_messageLabel maxWidth:CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2)];
-    frame.size.width  = CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2);
-    frame.origin.x    = kAFFAlertView_DefaultTitleMessagePadding;
-    frame.origin.y    = CGRectGetMaxY(_titleLabel.frame) + kAFFAlertView_DefaultTopMessagePadding;
-    _messageLabel.frame = frame;
+    CGRect frame        = [AFFAlertView boundingRectForLabel:_messageLabel maxWidth:CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2)];
+    frame.size.width    = CGRectGetWidth(self.bounds) - (kAFFAlertView_DefaultTitleMessagePadding * 2);
+    frame.origin.x      = kAFFAlertView_DefaultTitleMessagePadding;
+    frame.origin.y      = CGRectGetMaxY(_titleLabel.frame) + kAFFAlertView_DefaultTopMessagePadding;
+    _messageLabel.frame = CGRectIntegral(frame);
     
     [self addSubview:_messageLabel];
 }
@@ -205,52 +220,63 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 #pragma mark - Create additional text fields
 - (void)createAdditionalTextFields:(AFFAlertViewStyle)style {
     
-    if(style & AFFAlertViewStyle_PlainTextInput) {
-        [self createPlainTextInput];
+    //No style
+    if(style & AFFAlertViewStyle_Default) {
+        return;
     }
     
-    if(style & AFFAlertViewStyle_SecureTextInput) {
-        [self createSecureTextInput];
-    }
-    
-    //Adjust return key type depending on the available field(s).
-    if(_plainTextField && _secureTextField) {
+    //Plain and secure input
+    if(style & AFFAlertViewStyle_PlainTextInput && style & AFFAlertViewStyle_SecureTextInput) {
+        
+        [self createPlainTextInput:UIRectCornerTopLeft | UIRectCornerTopRight];
+        [self createSecureTextInput:UIRectCornerBottomLeft | UIRectCornerBottomRight];
+        
+#warning TODO : Put this to use
+        //Adjust return key type depending on the available field(s).
         _plainTextField.returnKeyType = UIReturnKeyNext;
+        
+    //Plain
+    } else if(style & AFFAlertViewStyle_PlainTextInput) {
+        [self createPlainTextInput:UIRectCornerAllCorners];
+        
+    //Secure
+    } else if(style & AFFAlertViewStyle_SecureTextInput) {
+        [self createSecureTextInput:UIRectCornerAllCorners];
     }
 }
 
-- (void)createPlainTextInput {
+- (void)createPlainTextInput:(UIRectCorner)corners {
     
-    _plainTextField         = [AFFAlertView createInputLabel:nil fontSize:kAFFAlertView_DefaultMessageFontSize secure:NO];
-
     //Frame
     CGRect frame            = CGRectZero;
-    frame.origin.x          = kAFFAlertView_DefaultTitleMessagePadding;
+    frame.origin.x          = kAFFAlertView_DefaultInputFieldPadding;
     frame.origin.y          = CGRectGetMaxY(_messageLabel.frame) + kAFFAlertView_DefaultTopTitlePadding;
-    frame.size.width        = CGRectGetWidth(self.frame) - frame.origin.x;
-    _plainTextField.frame   = frame;
+    frame.size.width        = CGRectGetWidth(self.frame) - (CGRectGetMinX(frame) * 2);
+    frame.size.height       = kAFFAlertView_DefaultInputFieldHeight;
+    
+    _plainTextField         = [AFFAlertView createInputLabel:frame fontSize:kAFFAlertView_DefaultMessageFontSize corners:corners secure:NO];
 
     [self addSubview:_plainTextField];
 }
 
-- (void)createSecureTextInput {
+- (void)createSecureTextInput:(UIRectCorner)corners {
     
-    _secureTextField        = [AFFAlertView createInputLabel:nil fontSize:kAFFAlertView_DefaultMessageFontSize secure:YES];
-    
+    //Frame
     CGFloat topPosition     = 0.0f;
     
     if(_plainTextField) {
-        topPosition         = CGRectGetMaxY(_plainTextField.frame);
+        topPosition         = CGRectGetMaxY(_plainTextField.frame) - kAFFAlertView_DefaultInputFieldBorderWidth;
     } else {
         topPosition         = CGRectGetMaxY(_messageLabel.frame) + kAFFAlertView_DefaultTopTitlePadding;
     }
     
-    //Frame
     CGRect frame            = CGRectZero;
-    frame.origin.x          = kAFFAlertView_DefaultTitleMessagePadding;
+    frame.origin.x          = kAFFAlertView_DefaultInputFieldPadding;
     frame.origin.y          = topPosition;
-    frame.size.width        = CGRectGetWidth(self.frame) - frame.origin.x;
-    _secureTextField.frame  = frame;
+    frame.size.width        = CGRectGetWidth(self.frame) - (CGRectGetMinX(frame) * 2);
+    frame.size.height       = kAFFAlertView_DefaultInputFieldHeight;
+
+    _secureTextField        = [AFFAlertView createInputLabel:frame fontSize:kAFFAlertView_DefaultMessageFontSize corners:corners secure:YES];
     
     [self addSubview:_secureTextField];
 }
@@ -283,7 +309,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 #pragma mark - Adjust frame
 - (void)adjustFrame {
     
-    CGFloat maxY          = CGRectGetMaxY(_messageLabel.frame);
+    CGFloat maxY         = CGRectGetMaxY(_messageLabel.frame);
     
     //Adjust frame by text fields (if available)
     if(_secureTextField) {
@@ -301,9 +327,9 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     //Add button frames
     maxY += kAFFAlertView_DefaultButtonHeight;
     
-    CGRect frame         = self.frame;
-    frame.size.height    = maxY;
-    self.frame           = frame;
+    CGRect frame      = self.frame;
+    frame.size.height = maxY;
+    self.frame        = CGRectIntegral(frame);
 }
 
 #pragma mark - Alert actions
@@ -340,10 +366,10 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     //Frame
     CGRect initialFrame;
     
-    UIView *containerView           = [AFFAlertView superViewContainer];
-    CGRect selfFrame                = self.frame;
-    CGRect containerViewFrame       = containerView.frame;
-    CATransform3D currentTransform  = self.layer.transform;
+    UIView *containerView          = [AFFAlertView superViewContainer];
+    CGRect selfFrame               = self.frame;
+    CGRect containerViewFrame      = containerView.frame;
+    CATransform3D currentTransform = self.layer.transform;
     
     switch(_animationDirection) {
         case AFFAlertViewAnimationFromDirection_Center:
@@ -368,19 +394,19 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     }
     
     //Add as subview
-    self.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
-    
     [containerView insertSubview:self aboveSubview:_backgroundBlockerView];
     self.frame           = initialFrame;
     self.hidden          = NO;
     self.layer.transform = currentTransform;
     
+    __weak typeof(self) weakSelf = self;
+    
     //Animate
     [UIView animateWithDuration:_showDuration delay:0.0f options:_showAnimationOptions animations:^{
         
-        self.frame                   = [AFFAlertView centerFrame:self.frame containerFrame:_backgroundBlockerView.frame keyboardOffset:_keyboardHeightOffset];
-        self.layer.transform         = CATransform3DMakeScale(1.0f, 1.0f, 1.0f);
-        self.alpha                   = 1.0f;
+        weakSelf.frame               = [AFFAlertView centerFrame:weakSelf.frame containerFrame:_backgroundBlockerView.frame keyboardOffset:_keyboardHeightOffset];
+        weakSelf.layer.transform     = CATransform3DMakeScale(1.0f, 1.0f, 1.0f);
+        weakSelf.alpha               = 1.0f;
         _backgroundBlockerView.alpha = 1.0f;
         
     } completion:^(BOOL finished) {
@@ -388,7 +414,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         _isBeingPresented = YES;
         
         if([_delegate respondsToSelector:@selector(alertViewDidShow:)]) {
-            [_delegate alertViewDidShow:self];
+            [_delegate alertViewDidShow:weakSelf];
         }
     }];
 }
@@ -436,12 +462,14 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
             break;
     }
     
+    __weak typeof(self) weakSelf = self;
+    
     //Animate
     [UIView animateWithDuration:_dismissDuration delay:0.0f options:_dismissAnimationOptions animations:^{
         
-        self.frame                   = dismissFrame;
-        self.alpha                   = alpha;
-        self.layer.transform         = newTransform;
+        weakSelf.frame                   = dismissFrame;
+        weakSelf.alpha                   = alpha;
+        weakSelf.layer.transform         = newTransform;
         _backgroundBlockerView.alpha = 0;
         
     } completion:^(BOOL finished) {
@@ -449,11 +477,11 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         _isBeingPresented = NO;
         
         if([_delegate respondsToSelector:@selector(alertViewDidDismss:)]) {
-            [_delegate alertViewDidDismss:self];
+            [_delegate alertViewDidDismss:weakSelf];
         }
         
         [_backgroundBlockerView removeFromSuperview];
-        [self removeFromSuperview];
+        [weakSelf removeFromSuperview];
     }];
 }
 
@@ -502,10 +530,16 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     _borderColor = borderColor;
     
-    //Inline borders
-    for(AFFAlertViewBorder *border in self.subviews) {
-        if([border isKindOfClass:[AFFAlertViewBorder class]]) {
-            border.backgroundColor = _borderColor;
+    //Inline borders and textfield borders
+    for(UIView *subview in self.subviews) {
+        
+        //Border view
+        if([subview isKindOfClass:[AFFAlertViewBorder class]]) {
+            subview.backgroundColor   = _borderColor;
+            
+        //Textfield
+        } else if([subview isKindOfClass:[AFFAlertViewTextField class]]) {
+            subview.layer.borderColor = _borderColor.CGColor;
         }
     }
     
@@ -516,23 +550,14 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 #pragma mark - Button background color
 - (void)setSelectedStateButtonBackgroundColor:(UIColor *)selectedStateButtonBackgroundColor {
     
+    _selectedStateButtonBackgroundColor = selectedStateButtonBackgroundColor;
+    
     for(AFFAlertViewButton *button in self.subviews) {
         if([button isKindOfClass:[AFFAlertViewButton class]]) {
             
             [button setBackgroundImage:[AFFAlertView imageWithColor:selectedStateButtonBackgroundColor] forState:UIControlStateHighlighted];
         }
     }
-}
-
-- (UIImage *)selectedStateButtonBackgroundImage {
-    
-    for(AFFAlertViewButton *button in self.subviews) {
-        if([button isKindOfClass:[AFFAlertViewButton class]]) {
-            
-            return [button imageForState:UIControlStateHighlighted];
-        }
-    }
-    return nil;
 }
 
 #pragma mark - Button text color
@@ -578,13 +603,15 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     CGRect frame = CGRectMake(posX, posY, CGRectGetWidth(viewFrame), CGRectGetHeight(viewFrame));
     
     //If self frame is taller than the keyboard then it must be offset
+    
+#warning TODO : This is incorrect
     if(CGRectGetMaxY(frame) > CGRectGetHeight(containerFrame) - keyboardOffset) {
         
         CGFloat diffY = CGRectGetMaxY(frame) - (CGRectGetHeight(containerFrame) - keyboardOffset);
         frame.origin.y -= diffY;
     }
     
-    return frame;
+    return CGRectIntegral(frame);
 }
 
 + (CGRect)topFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
@@ -594,7 +621,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     CGRect frame = CGRectMake(posX, posY, CGRectGetWidth(viewFrame), CGRectGetHeight(viewFrame));
     
-    return frame;
+    return CGRectIntegral(frame);
 }
 
 + (CGRect)bottomFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
@@ -604,7 +631,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     CGRect frame = CGRectMake(posX, posY, CGRectGetWidth(viewFrame), CGRectGetHeight(viewFrame));
     
-    return frame;
+    return CGRectIntegral(frame);
 }
 
 + (CGRect)leftFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
@@ -614,7 +641,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     CGRect frame = CGRectMake(posX, posY, CGRectGetWidth(viewFrame), CGRectGetHeight(viewFrame));
     
-    return frame;
+    return CGRectIntegral(frame);
 }
 
 + (CGRect)rightFrame:(CGRect)viewFrame containerFrame:(CGRect)containerFrame {
@@ -624,22 +651,44 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     CGRect frame = CGRectMake(posX, posY, CGRectGetWidth(viewFrame), CGRectGetHeight(viewFrame));
     
-    return frame;
+    return CGRectIntegral(frame);
 }
 
 #pragma mark - Utilities
-+ (UITextField *)createInputLabel:(NSString *)title fontSize:(CGFloat)fontSize secure:(BOOL)secure {
++ (AFFAlertViewTextField *)createInputLabel:(CGRect)frame fontSize:(CGFloat)fontSize corners:(UIRectCorner)corners secure:(BOOL)secure {
     
-    UIFont *font           = (bold) ? [UIFont boldSystemFontOfSize:fontSize] : [UIFont systemFontOfSize:fontSize];
+    //Label
+    AFFAlertViewTextField *label = [[AFFAlertViewTextField alloc] initWithFrame:CGRectIntegral(frame)];
+    label.autoresizingMask       = UIViewAutoresizingFlexibleWidth;
+    label.font                   = [UIFont systemFontOfSize:fontSize];
+    label.secureTextEntry        = secure;
+    label.backgroundColor        = [UIColor whiteColor];
+    label.textColor              = AFFAlertView_DEFAULT_TEXT_COLOR;
+    label.textColor              = [UIColor blackColor];
+    label.returnKeyType          = UIReturnKeyDefault;
 
-    UITextField *label     = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, kAFFAlertView_DefaultInputFieldHeight)];
-    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    label.font             = font;
-    label.secureTextEntry  = secure;
-    label.backgroundColor  = [UIColor clearColor];
-    label.textColor        = AFFAlertView_DEFAULT_TEXT_COLOR;
-    label.placeholder      = title;
-    label.returnKeyType    = UIReturnKeyDone;
+    //Left view padding
+    UIView *leftView             = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kAFFAlertView_DefaultInputFieldViewPadding, CGRectGetHeight(label.frame))];
+    label.leftViewMode           = UITextFieldViewModeAlways;
+    label.leftView               = leftView;
+
+    //Right view padding
+    UIView *rightView            = [[UIView alloc] initWithFrame:leftView.frame];
+    label.rightViewMode          = label.leftViewMode;
+    label.rightView              = rightView;
+    
+    //Corners
+    CAShapeLayer *maskLayer      = [CAShapeLayer layer];
+    maskLayer.frame              = label.bounds;
+    
+    CGSize cornerSize            = CGSizeMake(kAFFAlertView_DefaultInputFieldBorderRoundedCornerRadius, kAFFAlertView_DefaultInputFieldBorderRoundedCornerRadius);
+    UIBezierPath *roundedPath    = [UIBezierPath bezierPathWithRoundedRect:maskLayer.bounds byRoundingCorners:corners  cornerRadii:cornerSize];
+    maskLayer.fillColor          = AFFAlertView_DEFAULT_BORDER_COLOR.CGColor;
+    maskLayer.backgroundColor    = [UIColor clearColor].CGColor;
+    maskLayer.path               = [roundedPath CGPath];
+    
+    label.layer.mask             = maskLayer;
+    label.layer.masksToBounds    = YES;
     
     return label;
 }
@@ -683,8 +732,9 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     UIImage *backgroundImage = [AFFAlertView imageWithColor:[UIColor clearColor]];
     
     //Button selected background color image
-    UIColor *lighterBackgroundColor  = [AFFAlertView darkerColor:self.backgroundColor];
-    UIImage *selectedBackgroundImage = [AFFAlertView imageWithColor:lighterBackgroundColor];
+    UIColor *lighterBackgroundColor     = [AFFAlertView darkerColor:self.backgroundColor];
+    _selectedStateButtonBackgroundColor = lighterBackgroundColor;
+    UIImage *selectedBackgroundImage    = [AFFAlertView imageWithColor:lighterBackgroundColor];
     
     //Frame
     CGFloat width  = (CGRectGetWidth(containerRect) / maxButtonCount) + kAFFAlertView_DefaultRoundedBorderWidth;
