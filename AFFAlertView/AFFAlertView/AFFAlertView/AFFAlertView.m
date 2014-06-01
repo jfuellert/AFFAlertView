@@ -608,7 +608,13 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 #pragma mark - Superview
 + (UIView *)superViewContainer {
     
-    UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+    //Choose the the top subview view of the topmost presented view controller
+    UIView *rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentedViewController].view;
+
+    //If not controller is presented then look for the topmost subview of the root view controller.
+    if(!rootView) {
+        rootView = [[[UIApplication sharedApplication] keyWindow] rootViewController].view;
+    }
     
     return rootView;
 }
