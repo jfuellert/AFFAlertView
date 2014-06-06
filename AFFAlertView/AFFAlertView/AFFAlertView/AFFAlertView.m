@@ -344,6 +344,12 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     //Add padding
     maxY += kAFFAlertView_DefaultTopTitlePadding;
     
+    //Loop through subviews to get a max y position
+    for(UIView *subview in self.subviews) {
+        
+        maxY = MAX(CGRectGetMaxY(subview.frame), maxY);
+    }
+    
     //Add button frames
     maxY += kAFFAlertView_DefaultButtonHeight;
     
@@ -399,18 +405,11 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     }
     
     //Frame
-    CGRect initialFrame;
-    
-    if([_delegate respondsToSelector:@selector(alertViewPreferredSize:)]) {
-        CGSize selfFrameSize = [_delegate alertViewPreferredSize:self];
-        self.frame = CGRectMake(0, 0, selfFrameSize.width, selfFrameSize.height + kAFFAlertView_DefaultButtonHeight);
-    } else {
-        [self adjustFrame];
-    }
-    
-    CGRect selfFrame = self.frame;
+    [self adjustFrame];
     [self adjustBottomBorder];
     
+    CGRect initialFrame;
+    CGRect selfFrame = self.frame;
     UIView *containerView          = [AFFAlertView superViewContainer];
     CGRect containerViewFrame      = containerView.frame;
     CATransform3D currentTransform = self.layer.transform;
