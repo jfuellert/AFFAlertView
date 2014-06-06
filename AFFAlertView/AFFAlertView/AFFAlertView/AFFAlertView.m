@@ -149,6 +149,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     _backgroundBlockerView.backgroundColor        = AFFAlertView_DEFAULT_BACKGROUND_VIEW_COLOR;
     _backgroundBlockerView.alpha                  = 0;
     _backgroundBlockerView.autoresizingMask       = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [superView addSubview:_backgroundBlockerView];
 }
 
 #pragma mark - Background
@@ -413,6 +414,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     }
     
     //Add as subview
+    [containerView addSubview:_backgroundBlockerView];
     [containerView insertSubview:self aboveSubview:_backgroundBlockerView];
     self.frame           = initialFrame;
     self.hidden          = NO;
