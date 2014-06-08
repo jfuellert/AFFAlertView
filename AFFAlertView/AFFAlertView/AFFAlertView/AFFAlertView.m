@@ -354,8 +354,8 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         maxY = MAX(CGRectGetMaxY(subview.frame), maxY);
     }
     
-//    //Add button frames
-//    maxY += kAFFAlertView_DefaultButtonHeight;
+    //Add button frames
+    maxY += kAFFAlertView_DefaultButtonHeight;
     
     CGRect frame      = self.frame;
     frame.size.height = maxY;
@@ -413,7 +413,7 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     if([_delegate respondsToSelector:@selector(alertViewPreferredSize:)]) {
         CGSize selfFrameSize = [_delegate alertViewPreferredSize:self];
-        self.frame = CGRectMake(0, 0, selfFrameSize.width, selfFrameSize.height + kAFFAlertView_DefaultButtonHeight);
+        self.frame = CGRectMake(0, 0, selfFrameSize.width, selfFrameSize.height);
     } else {
         [self adjustFrame];
     }
