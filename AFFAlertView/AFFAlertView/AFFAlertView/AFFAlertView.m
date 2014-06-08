@@ -344,16 +344,6 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     //Add padding
     maxY += kAFFAlertView_DefaultTopTitlePadding;
     
-    //Loop through subviews to get a max y position
-    for(UIView *subview in self.subviews) {
-        
-        if([subview isKindOfClass:[AFFAlertViewButton class]]) {
-            continue;
-        }
-        
-        maxY = MAX(CGRectGetMaxY(subview.frame), maxY);
-    }
-    
     //Add button frames
     maxY += kAFFAlertView_DefaultButtonHeight;
     
