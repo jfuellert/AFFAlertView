@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name       		  = 'AFFAlertView'
-  s.version    		  = ‘0.3’
+  s.version    		  = '0.3'
   s.authors       	  = { 'Jeremy Fuellert' => 'jfuellert@gmail.com' }
   s.summary      	  = 'AFFAlertView is customizable iOS 7 styled UIAlertView alternative that supports subclassing.'
   s.homepage    	  = 'https://github.com/jfuellert/AFFAlertView'
