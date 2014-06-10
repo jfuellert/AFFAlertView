@@ -1,6 +1,6 @@
 {
   "name": "AFFAlertView",
-  "version": "0.0.3",
+  "version": “0.3”,
   "authors": {
     "Jeremy Fuellert": "jfuellert@gmail.com"
   },
@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/jfuellert/AFFAlertView.git",
-    "tag": "0.0.3"
+    "tag": “0.3”
   },
   "source_files": "AFFAlertView/AFFAlertView/*/*.{h,m}",
   "public_header_files": "AFFAlertView/AFFAlertView/*/*.h",
