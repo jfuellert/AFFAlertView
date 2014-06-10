@@ -53,6 +53,9 @@ AFFAlertView also has an option to manually dismiss the alert view.
 AFFAlertViewDelegate is a fully optional protocol that provides useful functionality for alert dismissal clicks and basic UI interactions.
 
 ``` objective-c
+/** Called before showing the alert view. This is used to override the default alert view size within constraints such as keyboard size and orientation. */
+- (CGSize)alertViewPreferredSize:(AFFAlertView *)alertView;
+
 /** Called when an alert view button has been selected. */
 - (void)alertView:(AFFAlertView *)alertView didDismissWithButton:(AFFAlertViewButtonModel *)buttonModel;
 
