@@ -885,6 +885,14 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     return nil;
 }
 
+#pragma mark - Layout
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    [self adjustFrame];
+    [self adjustBottomBorder];
+}
+
 #pragma mark - Dealloc
 - (void)dealloc {
     
