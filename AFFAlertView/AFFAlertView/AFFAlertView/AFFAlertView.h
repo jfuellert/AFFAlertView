@@ -109,6 +109,9 @@ NS_CLASS_AVAILABLE_IOS(5_0) @interface AFFAlertView : UIView
 /** The text color for the buttions. Default is '[UIColor colorWithWhite:0.0f alpha:0.2f]'. */
 @property (nonatomic, assign) UIColor *borderColor;
 
+/** Returns an array of UIButton subclasses from the AFFAlertView. */
+@property (nonatomic, strong, readonly) NSArray *buttons;
+
 /** The text color for the buttons. Default is '[UIColor colorWithRed:0.0f/255.0f green:122.0f/255.0f blue:255.0f/255.0f alpha:1.0f]'. */
 @property (nonatomic, assign) UIColor *buttonTextColor;
 

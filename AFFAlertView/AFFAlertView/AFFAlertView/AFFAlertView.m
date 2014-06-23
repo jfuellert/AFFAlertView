@@ -307,6 +307,9 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 #pragma mark - Buttons
 - (void)createButtonsWithTitles:(NSArray *)buttonTitleArray {
     
+    //Button array
+    NSMutableArray *buttons   = [[NSMutableArray alloc] initWithCapacity:buttonTitleArray.count];
+    
     //Create buttons from titles
     NSUInteger maxButtonCount = buttonTitleArray.count;
     NSUInteger index          = 0;
@@ -319,6 +322,8 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         [button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         [self insertSubview:button atIndex:0];
         
+        [buttons addObject:button];
+        
         //Create right border for button
         if(index < maxButtonCount - 1) {
             [self addSubview:[AFFAlertView createRightBorderWithPosX:CGRectGetMaxX(button.frame) posY:CGRectGetMinY(button.frame) height:CGRectGetHeight(button.frame)]];
@@ -327,6 +332,8 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         //Increment index
         index ++;
     }
+    
+    _buttons = buttons;
 }
 
 #pragma mark - Adjust frame
@@ -597,11 +604,8 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     _selectedStateButtonBackgroundColor = selectedStateButtonBackgroundColor;
     
-    for(AFFAlertViewButton *button in self.subviews) {
-        if([button isKindOfClass:[AFFAlertViewButton class]]) {
-            
-            [button setBackgroundImage:[AFFAlertView imageWithColor:selectedStateButtonBackgroundColor] forState:UIControlStateHighlighted];
-        }
+    for(AFFAlertViewButton *button in _buttons) {
+        [button setBackgroundImage:[AFFAlertView imageWithColor:selectedStateButtonBackgroundColor] forState:UIControlStateHighlighted];
     }
 }
 
@@ -610,11 +614,8 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     _buttonTextColor = buttonTextColor;
     
-    for(AFFAlertViewButton *button in self.subviews) {
-        if([button isKindOfClass:[AFFAlertViewButton class]]) {
-            
-            [button setTitleColor:_buttonTextColor forState:UIControlStateNormal];
-        }
+    for(AFFAlertViewButton *button in _buttons) {
+        [button setTitleColor:_buttonTextColor forState:UIControlStateNormal];
     }
 }
 
@@ -622,11 +623,8 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
     
     _selectedStateButtonTextColor = selectedStateButtonTextColor;
     
-    for(AFFAlertViewButton *button in self.subviews) {
-        if([button isKindOfClass:[AFFAlertViewButton class]]) {
-            
-            [button setTitleColor:_selectedStateButtonTextColor forState:UIControlStateHighlighted];
-        }
+    for(AFFAlertViewButton *button in _buttons) {
+        [button setTitleColor:_selectedStateButtonTextColor forState:UIControlStateHighlighted];
     }
 }
 
