@@ -889,8 +889,18 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    [self adjustFrame];
+    if([_delegate respondsToSelector:@selector(alertViewPreferredSize:)]) {
+        CGSize selfFrameSize = [_delegate alertViewPreferredSize:self];
+        self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame), selfFrameSize.width, selfFrameSize.height);
+    } else {
+        [self adjustFrame];
+    }
+    
     [self adjustBottomBorder];
+    
+    if(self.isBeingPresented) {
+        self.frame = [AFFAlertView centerFrame:self.frame containerFrame:_backgroundBlockerView.frame keyboardOffset:_keyboardHeightOffset];
+    }
 }
 
 #pragma mark - Dealloc
