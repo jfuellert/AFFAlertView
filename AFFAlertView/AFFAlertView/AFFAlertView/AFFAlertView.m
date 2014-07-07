@@ -478,6 +478,12 @@ const CGFloat kAFFAlertView_DarkerColorPercentage         = 0.9f;
         [_delegate alertViewWillDismss:self];
     }
     
+    if(_plainTextField) {
+        [_plainTextField resignFirstResponder];
+    } else if(_secureTextField) {
+        [_secureTextField resignFirstResponder];
+    }
+    
     //Frame
     CGRect dismissFrame;
     
