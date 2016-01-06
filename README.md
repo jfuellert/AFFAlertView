@@ -1,5 +1,3 @@
-** Caution: This project is still in early development and may have many api changes. If you choose to use this product in active development please use a release build. **
-
 AFFAlertView
 ========
 AFFAlertView is a customizable alert view built for iOS. It is compatible with iOS 6+ so older devices can benefit from the iOS 7 UIAlertView look and feel. AFFAlertView comes with a list of modifiable properties which can give the alert view a custom style. It also supports subclassing so customization is even more abundant. 
@@ -18,7 +16,7 @@ Add the following line to your .podfile
 
 ##Support
 ####IOS
-Earliest tested and supported build and deployment target - iOS 6.0. 
+Earliest tested and supported build and deployment target - iOS 6.0.  
 Latest tested and supported build and deployment target - iOS 7.1.
 
 ##ARC Compatibility
